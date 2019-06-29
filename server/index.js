@@ -39,8 +39,8 @@ sequelize.sync()
 .then(() => {
     createSampleData();
 
-    app.listen(process.env.PORT, () => {
-        console.log('Listening on port ' + process.env.PORT)
+    app.listen(1234, () => {
+        console.log('Listening on port ' + 1234)
     });
 });
 
