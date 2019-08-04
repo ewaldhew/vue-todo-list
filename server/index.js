@@ -38,14 +38,14 @@ sequelize.sync().then(() => {
     createSampleData();
 
     app.listen(1234, () => {
-        console.log('Listening on port ' + 1234)
+        console.log(`Listening on port ${process.env.PORT}`)
     });
 });
 
 const app = express();
 app.use(bodyParser.json())
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", `http://localhost:${process.env.CLIENT_PORT}`);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Credentials", 'true');
     res.header("Access-Control-Allow-Methods", 'GET, PUT, PATCH, DELETE, HEAD')
@@ -61,11 +61,11 @@ app.put('/todo/', async (req, res) => {
             task_finished: false
         })
         let list = await models.TaskList.findByPk(req.body.id)
-        list.addTask(task);
+        await list.addTask(task)
 
-        res.send({ ok: success })
+        res.send({ ok: task });
     } catch (err) {
-        res.send({ ok: err })
+        res.send({ ok: err });
     }
 })
 
@@ -75,13 +75,14 @@ app.get('/todo/:id', async (req, res) => {
 })
 
 app.patch('/todo/:id', async (req, res) => {
-    await models.Task.findByPk(req.params.id)
-        .then((todo) => {
-            if (todo) {
-                todo.update(req.body)
-                    .then(() => { })
-            }
-        });
+    try {
+        const todo = await models.Task.findByPk(req.params.id)
+        todo.update(req.body)
+
+        res.send({ ok: todo })
+    } catch (err) {
+        res.send({ ok: err })
+    }
 })
 
 app.delete('/todo/:id', async (req, res) => {
