@@ -14,22 +14,14 @@
 <script>
 export default {
   name: 'TodoListCollection',
-  data() {
-    return {
-      lists: []
+  computed: {
+    lists() {
+      return this.$store.state.todoCollection;
     }
   },
   methods: {
     loadData() {
-      this.$store.dispatch('loadTodoCollection')
-      .then(({ ok }) => {
-        if (ok) {
-          this.lists = this.$store.state.todoCollection
-        }
-      })
-      .catch(() => {
-        this.lists = []
-      })
+      this.$store.dispatch('loadTodoCollection');
     }
   },
   beforeMount() {

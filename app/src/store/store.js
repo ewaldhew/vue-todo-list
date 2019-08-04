@@ -13,7 +13,10 @@ const DEFAULT_TODO = Object.freeze({
 export default new Vuex.Store({
     state: {
         todoCollection: [],
-        todoItems: {},
+        todoItems: {
+            name: '',
+            list: []
+        },
         todo: DEFAULT_TODO
     },
     mutations: {

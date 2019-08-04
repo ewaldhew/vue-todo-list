@@ -24,9 +24,7 @@ export default {
     createTodoList() {
       if (this.listName && this.listName.trim().length) {
         this.$store.dispatch('createTodoList', this.listName)
-        this.$router.replace('/task', () => {
-          this.$router.go(0);
-        });
+        this.$router.go(-1);
       }
     }
   },

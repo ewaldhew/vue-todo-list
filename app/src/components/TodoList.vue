@@ -5,10 +5,8 @@
       <div class="empty">Nothing to do. Add a new todo using the button.</div>
     </template>
     <template v-else>
-      <ul>
-        <template v-for="todo in todoList">
-          <TodoListItem v-bind:key="todo.id" :todo="todo" />
-        </template>
+      <ul v-bind:key="todoList.length">
+        <TodoListItem v-for="todo in todoList" v-bind:key="todo.id" :todo="todo" />
       </ul>
     </template>
     <router-link class="btn btn-dark" to="create" append>Create New Task</router-link>
@@ -16,14 +14,16 @@
 </template>
 
 <script>
-import TodoListItem from './TodoListItem.vue'
+import TodoListItem from "./TodoListItem.vue";
 
 export default {
-  name: 'TodoList',
-  data() {
-    return {
-      listName: "",
-      todoList: []
+  name: "TodoList",
+  computed: {
+    listName() {
+      return this.$store.state.todoItems.name;
+    },
+    todoList() {
+      return this.$store.state.todoItems.list;
     }
   },
   components: {
@@ -31,28 +31,19 @@ export default {
   },
   methods: {
     loadData() {
-      this.$store.dispatch('loadTodos', this.$route.params.id)
-        .then(({ ok }) => {
-          if (ok) {
-            this.listName = this.$store.state.todoItems.name
-            this.todoList = this.$store.state.todoItems.list
-          }
-        })
-        .catch(() => {
-          this.listName = ""
-          this.todoList = []
-        })
+      this.$store.dispatch("loadTodos", this.$route.params.id)
     }
   },
-  beforeMount() {
-    this.loadData()
+  beforeRouteEnter (to, from, next) {
+    next(vm => vm.loadData())
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {

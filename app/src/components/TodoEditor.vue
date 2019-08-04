@@ -48,9 +48,7 @@ export default {
           name: this.taskName
         })
       }
-      this.$router.replace('/task/' + this.$route.params.id, () => {
-        this.$router.go(0);
-      });
+      this.$router.go(-1);
     }
   },
   beforeMount() {
